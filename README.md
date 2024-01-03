@@ -1,0 +1,2 @@
+# easyVVUQ-PROCESS: Feasibility Uncertainty Quantification (UQ)
+A feasibility study using the PROCESS nuclear fusion power plant systems code and the easyVVUQ framework. It aims to assess the feasibility of two different power plant concepts under epistemic uncertainty.
