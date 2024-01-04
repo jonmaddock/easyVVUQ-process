@@ -1,0 +1,8 @@
+# Full Uncertainties
+This is the same as in the `few_uncs_fast` case, but with all uncertainties (21) allowed to vary simultaneously. Using 3rd-order PCE sampling, this results in 1.04e6 samples, rendering the problem very intensive. This therefore motivates a parameter screening study to identify the most influential parameters on the response, so that a subsequent detailed study can use these influential "screened" parameters only to make the problem computationally tractable.
+
+Run a full sensitivity analysis on Process. This uses a DEMO-like design point (optimised for maximum net electric power) with 21 epistemic uncertainties. Process's models are run once-through for a given value of uncertain inputs according to the Polynomial Chaos Expansion (PCE) sampling method, and the response/quantity of interest is the value of constraints, i.e. the feasibility. The results are the sensitivities (Sobol indicies), presented as a treemap plot.
+
+f-values (extra optimisation parameters used to convert the inequality constraints to equalities to support the legacy solver HYBRD) in the input file are fixed to 1.0; this causes the equality constraints to become inequalities again. This means that the values of the inequalities can be used to assess how satisfied/violated the constraints are.
+
+The job script `run_feasibility.job` only requests a single processor, but Dask is subsequently used to parallelise to 4 "workers" (in this case, processors) in the `feasibility.py` script.
