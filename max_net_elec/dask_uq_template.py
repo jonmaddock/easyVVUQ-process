@@ -1,3 +1,5 @@
+"""Template for running easyVVUQ using Dask for parallelism on a SLURM cluster."""
+
 import easyvvuq as uq
 import chaospy as cp
 from pathlib import Path

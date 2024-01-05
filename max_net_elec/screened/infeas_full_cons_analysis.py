@@ -7,20 +7,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import pandas as pd
-from pathlib import Path
+import pathlib as Path
 
 # %%
+db_location = "/home/ir-madd1/rds/rds-ukaea-ap001/ir-madd1/feasibility-uq/screened_o4/campaigns/model_inputsvij28ljd/campaign.db"
 print("Reading in campaign database.")
-
-# Find DB
-db_count = 0
-for db_path in Path.cwd().glob("campaigns/*/campaign.db"):
-    if db_count > 0:
-        raise RuntimeError("More than one database in the campaigns dir")
-
-    db_location = str(db_path.resolve())
-    db_count += 1
-
 # /// prefix is required before absolute path
 db_location_prefixed = f"sqlite:///{db_location}"
 campaign = uq.Campaign(

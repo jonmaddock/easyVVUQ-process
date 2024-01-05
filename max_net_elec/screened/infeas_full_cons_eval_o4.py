@@ -1,9 +1,9 @@
 # %% [markdown]
 # # Screened Feasibility UQ
 #
-# Take the generic DEMO solution, turned into an input file. Remove f-values at iteration vars, and replace their equality constraints with inequalities. Run PROCESS once-through with uncertain inputs, and the QoI as the value of constraints, i.e. the feasibility.
+# Take the generic DEMO solution, turned into an input file. Remove f-values at iteration vars, and replace their equality constraints with inequalities. Run PROCESS once-through with uncertain inputs, and the response/quantity of interest as the violated constraint residuals, i.e. the infeasibilities of all individual constraints as well as the overall infeasibility.
 #
-# Here, the inputs have already been screened using the single-parameter evaluation method to find the most sensitive inputs.
+# Here, the inputs have already been screened using the single-parameter evaluation method to find the most sensitive inputs. A 4th-order PCE method is used.
 
 # %%
 import easyvvuq as uq
@@ -107,16 +107,42 @@ params = {
 # QoIs
 # Violated constraint residuals
 qois = [
+    "objf",
+    "eq_1",
+    "eq_2",
+    "eq_11",
+    "ineq_5",
+    "ineq_8",
+    "ineq_9",
+    "ineq_13",
+    "ineq_15",
+    "ineq_30",
+    "ineq_16",
+    "ineq_24",
+    "ineq_25",
+    "ineq_26",
+    "ineq_27",
+    "ineq_33",
+    "ineq_34",
+    "ineq_35",
+    "ineq_36",
+    "ineq_60",
+    "ineq_62",
+    "ineq_65",
+    "ineq_72",
+    "ineq_79",
+    "ineq_81",
+    "ineq_68",
+    "ineq_31",
+    "ineq_32",
     "vio_constr_res",
 ]
 
 # Create encoder and decoder
 encoder = uq.encoders.GenericEncoder(
-    template_fname="demo_sol_no_f_IN.template", target_filename="IN.DAT"
+    template_fname="demo_sol_max_net_elec_no_f_IN.template", target_filename="IN.DAT"
 )
-decoder = uq.decoders.JSONDecoder(
-    target_filename="constraints.json", output_columns=qois
-)
+decoder = uq.decoders.JSONDecoder(target_filename="qois.json", output_columns=qois)
 
 cmd = "process -i IN.DAT"
 actions = uq.actions.local_execute(encoder, cmd, decoder)
@@ -128,10 +154,10 @@ campaign.add_app(name="feasibility", params=params, actions=actions)
 # Create PCE sampler
 # Vary all 21 uncertain inputs
 vary = {
-    "fdene": cp.Uniform(
-        1.1,
-        1.3,
-    ),
+    # "fdene": cp.Uniform(
+    #     1.1,
+    #     1.3,
+    # ),
     "hfact": cp.Uniform(
         1.0,
         1.2,
@@ -214,7 +240,7 @@ vary = {
     ),
 }
 print("Generating PCE sampler...", flush=True)
-pce_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=3)
+pce_sampler = uq.sampling.PCESampler(vary=vary, polynomial_order=4)
 print(f"Number of samples = {pce_sampler.n_samples}", flush=True)
 
 # Add pce_sampler to campaign
@@ -222,46 +248,3 @@ campaign.set_sampler(pce_sampler)
 
 # Draw samples, execute and collate
 campaign.execute(pool=client).collate(progress_bar=True)
-samples = campaign.get_collation_result()
-
-# %%
-samples
-
-# %%
-# Try to analyse all outputs variables: produces a linalg error
-# Analyse a single output variable, vio_constr_res
-results = campaign.analyse(qoi_cols=["vio_constr_res"])
-
-# Get its distribution
-dist = results.get_distribution(qoi="vio_constr_res")
-
-# Locations for density function to be evaluated
-# (This is taken from easyvvuq's fusion tutorial)
-x = np.linspace(dist.lower[0], dist.upper[0])
-pdf = dist.pdf(x)
-
-# Plot
-ax = sns.lineplot(x=x, y=pdf, markers=True)
-ax.set_title("Distribution for vio_constr_res")
-ax.set_xlabel("vio_constr_res")
-ax.set_ylabel("Probability density")
-# Again, this is different on each run: something stochastic
-
-# %% [markdown]
-# PDF for `vio_constr_res`. Appears right from looking at the EasyVVUQ tutorial (fusion Dask).
-
-# %% [markdown]
-# ## Sobol indices
-#
-# Can we get Sobol information out of this?
-
-# %%
-# results.plot_moments(qoi="vio_constr_res")
-# results.plot_sobols_first("vio_constr_res") # only for vecotr qois. Like constraint vectors?
-
-# Div by zero bug goes away when using more uncertainties
-fig, ax = plt.subplots()
-results.plot_sobols_treemap(
-    "vio_constr_res", figsize=(10, 10), ax=ax, filename="sobols"
-)
-# ax.set_title("blah")

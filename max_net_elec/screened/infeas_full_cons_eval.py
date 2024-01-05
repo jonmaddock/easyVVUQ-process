@@ -1,7 +1,7 @@
 # %% [markdown]
 # # Screened Feasibility UQ
 #
-# Take the generic DEMO solution, turned into an input file. Remove f-values at iteration vars, and replace their equality constraints with inequalities. Run PROCESS once-through with uncertain inputs, and the QoI as the value of constraints, i.e. the feasibility.
+# Take the generic DEMO solution, turned into an input file. Remove f-values at iteration vars, and replace their equality constraints with inequalities. Run PROCESS once-through with uncertain inputs, and the response/quantity of interest as the violated constraint residuals, i.e. the infeasibilities of all individual constraints as well as the overall infeasibility.
 #
 # Here, the inputs have already been screened using the single-parameter evaluation method to find the most sensitive inputs.
 
