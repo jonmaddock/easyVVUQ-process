@@ -6,6 +6,9 @@ from pathlib import Path
 from dask.distributed import Client
 from typing import Sequence, Dict, Any
 
+# Dir for storing runs and results db
+WORK_DIR = "campaigns"
+
 # Define parameter space
 # 21 Uncertainties from Alex's SA paper
 PARAMS = {
@@ -154,7 +157,6 @@ def evaluate(
     # Code from now on submitted to batch queue
 
     # Define campaign
-    WORK_DIR = "campaigns"
     Path(WORK_DIR).mkdir(exist_ok=True)
 
     campaign = uq.Campaign(name=campaign_name, work_dir=WORK_DIR)

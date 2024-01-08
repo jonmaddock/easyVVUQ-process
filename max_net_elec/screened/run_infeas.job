@@ -44,7 +44,10 @@ conda activate feasibility-uq
 conda env list
 
 #! Full path to application executable: 
-application="python /home/ir-madd1/rds/rds-ukaea-ap001/ir-madd1/feasibility-uq/screened/feas_screened_qois.py"
+application="
+jupyter execute /home/ir-madd1/rds/rds-ukaea-ap001/ir-madd1/feasibility-uq/screened/max_net_elec_eval_o3.ipynb && 
+jupyter execute /home/ir-madd1/rds/rds-ukaea-ap001/ir-madd1/feasibility-uq/screened/max_net_elec_analysis.ipynb
+"
 
 #! Run options for the application:
 options="> out.log 2> err.log"
