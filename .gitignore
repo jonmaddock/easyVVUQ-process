@@ -2,3 +2,5 @@ campaigns/
 *.pdf
 *.png
 *.log
+.vscode
+__pycache__
