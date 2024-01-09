@@ -16,9 +16,7 @@
 #! How many (MPI) tasks will there be in total? (<= nodes*56)
 #SBATCH --ntasks=1
 #! How much wallclock time will be required?
-#SBATCH --time=00:30:00
-#! Memory required
-#SBATCH --mem=100G
+#SBATCH --time=00:20:00
 #! What types of email messages do you wish to receive?
 #SBATCH --mail-type=ALL
 
@@ -46,7 +44,7 @@ conda activate feasibility-uq
 conda env list
 
 #! Full path to application executable: 
-application="python /home/ir-madd1/rds/rds-ukaea-ap001/ir-madd1/easyVVUQ-process/full_uncerts/feasibility.py"
+application="jupyter execute /home/ir-madd1/rds/rds-ukaea-ap001/ir-madd1/easyVVUQ-process/examples/infeas_cluster.ipynb"
 
 #! Run options for the application:
 options="> out.log 2> err.log"
