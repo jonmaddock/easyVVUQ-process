@@ -584,7 +584,7 @@ boundu(2) = $boundu_2
 boundl(18) = $boundl_18
 flhthresh = $flhthresh * F-value for l-h power threshold
 psepbqarmax = $psepbqarmax * maximum ratio of Psep*Bt/qAR (MWT/m)
-bscfmax  = $bscfmax * Maximum fraction of plasma current from bootstrap;
+cboot  = $cboot * Bootstrap current fraction multiplier
 etaech = $etaech * ECRH wall-plug efficiency
 pinjalw  = $pinjalw * Maximum allowable value for injected power (mw)
 etaiso = $etaiso * isentropic efficiency of FW and blanket coolant pumps
@@ -595,7 +595,7 @@ fimp(14) = $fimp_14
 alstroh = $alstroh * allowable hoop stress in Central Solenoid structural material (Pa)
 aspect   = $aspect * Aspect ratio (iteration variable 1)
 hfact    = $hfact * H factor on energy confinement times (iteration variable 10)
-fgwped = $fgwped * fraction of Greenwald density to set as pedestal-top density
+fdene = $fdene * fraction of Greenwald density to set as pedestal-top density
 kappa = $kappa
 triang   = $triang * Plasma separatrix triangularity (calculated if ishape=1; 3 or 4)
 sig_tf_wp_max    = $sig_tf_wp_max * Allowable maximum shear stress in TF coil conduit (Tresca criterion) (Pa)
