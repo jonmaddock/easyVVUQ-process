@@ -164,7 +164,7 @@ taulimit = 5.0
 icc = 65
 ixc = 113 * ftaucq
 ftaucq = 0.919
-sigvvall = 9.3e7
+max_vv_stress = 9.3e7
 
 * CS stress limit *
 *-----------------*
