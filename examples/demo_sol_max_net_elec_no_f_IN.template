@@ -545,7 +545,7 @@ dhecoil  = 0.01 * diameter of central helium channel in TF winding (m)
 fcutfsu  = 0.5 * copper fraction of cable conductor (TF coils)
 i_tf_sc_mat = 1 * Switch for superconductor material in TF coils;
 ripmax   = 0.6 * aximum allowable toroidal field ripple amplitude at plasma edge (%)
-sigvvall = 9.3e7 * allowable stress from TF quench in vacuum vessel (Pa)
+max_vv_stress = 9.3e7 * allowable stress from TF quench in vacuum vessel (Pa)
 tdmptf   = 27.632 * fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
 n_tf     = 16 * Number of TF coils (default = 50 for stellarators); Number of TF coils outer legs for ST
 tftmp    = 4.75 * peak helium coolant temperature in TF coils and PF coils (K)
