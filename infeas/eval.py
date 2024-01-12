@@ -72,7 +72,7 @@ PARAMS = {
 # QoIs/responses
 # Violated constraint residuals
 QOIS = [
-    "objf",
+    "obj_func",
     "eq_1",
     "eq_2",
     "eq_11",
@@ -100,7 +100,7 @@ QOIS = [
     "ineq_68",
     "ineq_31",
     "ineq_32",
-    "vio_constr_res",
+    "rms_vio_constr_res",
 ]
 
 
