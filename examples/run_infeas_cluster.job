@@ -44,7 +44,9 @@ conda activate feasibility-uq
 conda env list
 
 #! Full path to application executable: 
-application="jupyter execute /home/ir-madd1/rds/rds-ukaea-ap001/ir-madd1/easyVVUQ-process/examples/infeas_cluster.ipynb"
+# Execute evaluation and analysis notebooks
+application="jupyter execute /home/ir-madd1/rds/rds-ukaea-ap001/ir-madd1/easyVVUQ-process/examples/infeas_eval_cluster.ipynb \
+/home/ir-madd1/rds/rds-ukaea-ap001/ir-madd1/easyVVUQ-process/examples/infeas_analyse_cluster.ipynb"
 
 #! Run options for the application:
 options="> out.log 2> err.log"
