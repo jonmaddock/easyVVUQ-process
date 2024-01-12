@@ -40,20 +40,20 @@ module load rhel7/default-ccl              # REQUIRED - loads the basic environm
 #! Insert additional module load commands after this line if needed:
 # Activate conda
 eval "$(conda shell.bash hook)"
-conda activate feasibility-uq
+conda activate easyvvuq-process
 conda env list
-
-#! Full path to application executable: 
-# Execute evaluation and analysis notebooks
-application="jupyter execute /home/ir-madd1/rds/rds-ukaea-ap001/ir-madd1/easyVVUQ-process/examples/infeas_eval_cluster.ipynb \
-/home/ir-madd1/rds/rds-ukaea-ap001/ir-madd1/easyVVUQ-process/examples/infeas_analyse_cluster.ipynb"
-
-#! Run options for the application:
-options="> out.log 2> err.log"
 
 #! Work directory (i.e. where the job will run):
 workdir="$SLURM_SUBMIT_DIR"  # The value of SLURM_SUBMIT_DIR sets workdir to the directory
                              # in which sbatch is run.
+
+#! Full path to application executable: 
+# Execute evaluation and analysis notebooks
+application="jupyter nbconvert --execute $workdir/infeas_eval_cluster.ipynb --to notebook --inplace && \
+jupyter nbconvert --execute $workdir/infeas_analysis_cluster.ipynb --to notebook --inplace"
+
+#! Run options for the application:
+options="> out.log 2> err.log"
 
 #! Number of MPI tasks to be started by the application per node and in total (do not change):
 np=$[${numnodes}*${mpi_tasks_per_node}]
