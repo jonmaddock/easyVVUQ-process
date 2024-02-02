@@ -6,11 +6,10 @@ A DEMO-like design is optimised using PROCESS for maximum net electric output, a
 
 ## Installation
 
-It is recommended to use a virtual environment. Firstly, Process needs to be installed. Clone the `process-uq` fork of Process, and switch to the `dakota` branch. This branch adds the `responses.json` output file, which contains the violated constraint residuals.
+It is recommended to use a virtual environment. Firstly, Process needs to be installed.
 ```
-git clone -b dakota https://github.com/jonmaddock/process-uq.git
+git clone https://github.com/ukaea/PROCESS.git
 ```
-
 Then install Process:
 ```
 cd process-uq
