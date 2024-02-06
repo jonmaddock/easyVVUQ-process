@@ -20,8 +20,8 @@ cmake --build build
 Secondly, clone this repository and install the `infeas` package:
 ```
 cd ..
-git clone https://github.com/jonmaddock/process-uq.git
-cd process-uq
+git clone https://github.com/jonmaddock/easyVVUQ-process.git
+cd easyVVUQ-process
 pip install .
 ```
 
