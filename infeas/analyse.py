@@ -12,6 +12,8 @@ from infeas.eval import QOIS, WORK_DIR
 def read_campaign(campaign_name: str) -> pd.DataFrame:
     """Read in evaluated campaign and return dataframe.
 
+    Fetches the latest campaign with matching name.
+
     Parameters
     ----------
     campaign_name : str
@@ -26,17 +28,24 @@ def read_campaign(campaign_name: str) -> pd.DataFrame:
 
     Raises
     ------
-    ValueError
-        Multiple campaigns have the same name prefix
+    FileNotFoundError
+        No database found with this campaign_name
     """
-    campaign_dir_matches = Path(WORK_DIR).glob(f"{campaign_name}*")
-    campaign_dir_matches_list = list(campaign_dir_matches)
-    if len(campaign_dir_matches_list) > 1:
-        raise ValueError("Multiple campaigns exist with that name.")
-
-    db_location = (campaign_dir_matches_list[0] / "campaign.db").resolve()
-
     print("Reading in campaign database.")
+
+    # Find latest modified database with matching campaign_name
+    # e.g. campaign_name = "example_local" matches
+    # ./campaigns/example_local6ewb9dvw/campaign.db (easyVVUQ applies hash)
+    latest_mod_time = 0.0
+    for db_path in Path(WORK_DIR).glob(f"{campaign_name}*/campaign.db"):
+        mod_time = db_path.stat().st_mtime
+        if mod_time > latest_mod_time:
+            latest_mod_time = mod_time
+            db_location = str(db_path.resolve())
+
+    if latest_mod_time == 0.0:
+        raise FileNotFoundError("No database found.")
+
     # /// prefix is required before absolute path
     db_location_prefixed = f"sqlite:///{db_location}"
     campaign = uq.Campaign(
