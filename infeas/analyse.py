@@ -57,7 +57,9 @@ def read_campaign(campaign_name: str) -> pd.DataFrame:
     print(f"Campaign read in. Number of samples = {sample_count}")
 
     # Drop strange multi-index of 0
-    samples.columns = samples.columns.droplevel(1)
+    # TODO Commenting out required for reliability analysis work: may break
+    # other studies
+    # samples.columns = samples.columns.droplevel(1)
     return campaign, samples
 
 

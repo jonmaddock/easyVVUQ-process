@@ -74,9 +74,12 @@ class MfileDecoder(uq.decoders.JSONDecoder):
         }
 
         # Only want violated constraint values
-        # Coerce feasible inequality constraints (> 0) = 0.0
+        # Coerce feasible inequality constraints (c > 0) to 0.0
+        # Sign of constraints confusing: beware cc = -cc in constraints module;
+        # against docs!
+        # TODO Check sign of violated constraints is definitely right
         # TODO Not sure if we want to mask non-violated constraint
-        # values at this stage: infeasibile responses only
+        # values at this stage: infeasible responses only
         vio_ineq_constrs_dict = {}
         for key, value in ineq_constrs_dict.items():
             if value > 0:
@@ -89,11 +92,16 @@ class MfileDecoder(uq.decoders.JSONDecoder):
 
         # Calculate RMS constraint residuals for violated constraints only
         # Create arrays from constraints dicts
-        eq_constrs = np.array(list(eq_constrs_dict.values()))
+        # Don't include eq constraints
+        # TODO Should this be permanent?
+        # eq_constrs = np.array(list(eq_constrs_dict.values()))
         vio_ineq_constrs = np.array(list(vio_ineq_constrs_dict.values()))
-        vio_constrs = np.concatenate((eq_constrs, vio_ineq_constrs))
+        # vio_constrs = np.concatenate((eq_constrs, vio_ineq_constrs))
+        vio_constrs = vio_ineq_constrs
         rms_vio_constr_res = np.sqrt(np.mean(vio_constrs**2))
         responses["rms_vio_constr_res"] = rms_vio_constr_res
+
+        # TODO Use different reliability metrics to RMS violated inequality constraints
 
         return responses
 
