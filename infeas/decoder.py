@@ -99,9 +99,22 @@ class MfileDecoder(uq.decoders.JSONDecoder):
         # vio_constrs = np.concatenate((eq_constrs, vio_ineq_constrs))
         vio_constrs = vio_ineq_constrs
         rms_vio_constr_res = np.sqrt(np.mean(vio_constrs**2))
-        responses["rms_vio_constr_res"] = rms_vio_constr_res
 
-        # TODO Use different reliability metrics to RMS violated inequality constraints
+        # TODO Would be better to override method in notebook for testing
+        # Try subtracting solution RMS cons threshold
+        rms_cons_sol_thresh = 0.06034437205737559
+        over_tol_rms_vio_constr_res = rms_vio_constr_res - rms_cons_sol_thresh
+
+        # Don't coerce to 0; it's fine if some severitiy values are -ve:
+        # Corresponds to feasible solutions
+        # over_tol_rms_vio_constr_res = over_tol_rms_vio_constr_res * (
+        #     over_tol_rms_vio_constr_res > 0
+        # )
+        responses["rms_vio_constr_res"] = over_tol_rms_vio_constr_res
+        # responses["rms_vio_constr_res"] = rms_vio_constr_res
+
+        # TODO Don't use RMS violated inequality constraints: use different
+        # reliability metric
 
         return responses
 
