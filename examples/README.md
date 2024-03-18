@@ -13,3 +13,7 @@ f-values (extra optimisation parameters used to convert the inequality constrain
 ## Cluster evaluation
 
 For more intensive studies (more uncertain parameters, higher order PCEs), parallelised cluster execution is required. The job script `run_infeas_cluster.job` only requests a single processor, but Dask is subsequently used to parallelise to 4 "workers" (in this case, processors) in the `infeas_cluster.ipynb` notebook. This approach is used in the main study.
+
+## Input file preparation
+
+This covers the preparation of a Process input file for UQ analysis.
