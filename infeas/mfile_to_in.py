@@ -11,6 +11,28 @@ from typing import Optional, Sequence
 import re
 
 
+"""Unfortunately, f-values have to be detected in two ways. This is because
+they are enabled as:
+ixc = 23 * fdene
+or just
+ixc = 23
+to enable the f-value as an optimisation parameter, and
+fdene = 1.2
+to set the value.
+
+When disabling the f-value as an opt param, the number has to
+be used as the presence of the comment can't be relied on.
+
+When ignoring the solution value of an f-value opt param, as the inital point
+value is desired instead, the name of the f-value variable must be used. This
+is because the itvarxxx number has no relation to the opt param number, and can't
+be used for identification.
+
+Therefore the numbers are recognised in an f-value opt param number list, but
+the f-value names are recognised by finding variables beginning with f, then
+ignoring ones that are known not to be f-values.
+"""
+
 # List of optimisation param numbers that are f-values
 F_VALUE_OPT_PARAM_NUMBERS = [
     14,
@@ -148,9 +170,28 @@ def convert(
     in_dat_path = Path(original_in_name)
     in_dat = InDat(in_dat_path)
 
+    # Discard optimisation parameter f-value values at solution
+    # Retain initial values of f-values as in input file
+    dropped_sol_f_value_count = 0
+
     # Change to the new optimisation parameter values
     for var_name, value in opt_params.items():
+        # Check for f-values
+        if var_name.startswith("f"):
+            # Get part before ( (in case var is array)
+            var_name_fmt = var_name.split("(")[0]
+            if var_name_fmt not in STARTS_WITH_F_BUT_NOT_F_VALUE_NAMES:
+                # Opt param is probably an f-value: don't overwrite IN.DAT with
+                # solution value of f-value
+                # Debug
+                # print(f"Dropping sol value for f-value {var_name}")
+                dropped_sol_f_value_count += 1
+                continue
+
+        # Otherwise update new IN.DAT value with solution value
         in_dat.add_parameter(var_name, value)
+
+    print(f"Solution f-values ignored = {dropped_sol_f_value_count}")
 
     # Write out new IN.DAT, with optimisation parameters set to original
     # solution vector
@@ -226,7 +267,8 @@ def remove_f_values(lines_with_f_values: Sequence[str]) -> list[str]:
             if int(opt_param_number) in F_VALUE_OPT_PARAM_NUMBERS:
                 # Found an f-value: drop the line
                 line_fmt = line.removesuffix("\n")
-                print(f'Removing "{line_fmt}"')
+                # Debug
+                # print(f'Removing "{line_fmt}"')
                 f_value_removal_count += 1
                 continue
 
@@ -249,8 +291,6 @@ def remove_f_values(lines_with_f_values: Sequence[str]) -> list[str]:
             f"Suspect opt params to check aren't f-values: {suspect_opt_params_beginning_with_f}"
         )
     else:
-        print(f"{f_value_removal_count} f-values removed")
-
-    # TODO Remove f-value values too: all should be >= 1
+        print(f"f-values removed as optimisation parameters = {f_value_removal_count}")
 
     return lines_without_f_values
