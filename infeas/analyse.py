@@ -9,8 +9,8 @@ from typing import Tuple
 from infeas.eval import QOIS, WORK_DIR
 
 
-def read_campaign(campaign_name: str) -> pd.DataFrame:
-    """Read in evaluated campaign and return dataframe.
+def get_campaign(campaign_name: str) -> uq.campaign.Campaign:
+    """Read in evaluated campaign and return campaign object.
 
     Fetches the latest campaign with matching name.
 
@@ -23,8 +23,6 @@ def read_campaign(campaign_name: str) -> pd.DataFrame:
     -------
     uq.campaign.Campaign
         easyVVUQ campaign
-    pd.DataFrame
-        Evaluation results
 
     Raises
     ------
@@ -52,15 +50,27 @@ def read_campaign(campaign_name: str) -> pd.DataFrame:
         db_location=db_location_prefixed, name=campaign_name, work_dir=WORK_DIR
     )
 
-    samples = campaign.get_collation_result()
-    sample_count = samples.shape[0]
-    print(f"Campaign read in. Number of samples = {sample_count}")
+    return campaign
 
-    # Drop strange multi-index of 0
-    # TODO Commenting out required for reliability analysis work: may break
-    # other studies
-    # samples.columns = samples.columns.droplevel(1)
-    return campaign, samples
+
+def get_samples(campaign: uq.campaign.Campaign) -> pd.DataFrame:
+    """Get samples from campaign object.
+
+    Parameters
+    ----------
+    campaign : uq.campaign.Campaign
+        campaign object
+
+    Returns
+    -------
+    pd.DataFrame
+        evaluated samples
+    """
+    samples = campaign.get_collation_result()
+
+    # Drop unnecessary multi-index of 0
+    samples.columns = samples.columns.droplevel(1)
+    return samples
 
 
 def describe_qois(results: pd.DataFrame) -> pd.DataFrame:
